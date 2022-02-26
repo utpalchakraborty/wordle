@@ -1,5 +1,6 @@
 # word_list_file = 'words_5.txt'
-word_list_file = "words_5_long.txt"
+# word_list_file = "words_5_long.txt"
+word_list_file = "nytimes_list.txt"
 
 
 def get_word_data() -> list[str]:
@@ -47,3 +48,4 @@ if __name__ == "__main__":
             pins=[(1, "s"), (2, "p"), (5, "l")],
         )
     )
+
