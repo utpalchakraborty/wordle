@@ -11,21 +11,23 @@ def get_word_data() -> list[str]:
 def constrain(
     all_possible_words: list[str],
     letters_to_remove: str,
-    letters_to_contain: str,
+    unpins: list[tuple[int, str]],
     pins: list[tuple[int, str]],
 ) -> list[str]:
     """
     given a list of words returns a new list that satisfies the given
     constraints
     :param all_possible_words: the input list of words
-    :param letters_to_remove:  the returned list of words do not contain these leters
-    :param letters_to_contain: the returned list of words do contain these letters
-    :param pins: the returned list of words contained letters pinned to these position.
+    :param letters_to_remove:  the returned list of words do not contain these letters
+    :param unpins: the returned list of words contain these characters but not at the
+                   position specified.
+    :param pins: the returned list of words contain letters pinned to these position.
                  This is a list of tuples of the format (index, character) specifying that
                  index position `index` is fixed with character `character`
                  The first index position is 1 for convenience purposes
     :return: the new list that satisfies the above constraints
     """
+    letters_to_contain = set(t[1] for t in unpins)
     return [
         word
         for word in all_possible_words
@@ -38,6 +40,9 @@ def constrain(
         and all(
             word[pin[0] - 1] == pin[1] for pin in pins
         )  # filter words having these pins
+        and all(
+            word[unpin[0] - 1] != unpin[1] for unpin in unpins
+        )  # filter words having these unpins
     ]
 
 
@@ -77,24 +82,14 @@ def sort_by_entropy(words: list[str]) -> list[str]:
 
 if __name__ == "__main__":
     all_words = get_word_data()
-    print(sort_by_entropy(all_words))
 
     print(
         sort_by_entropy(
             constrain(
                 all_possible_words=all_words,
-                letters_to_remove="f",
-                letters_to_contain="otn",
-                pins=[(2, "u")],
+                letters_to_remove="crnilp",
+                unpins=[(1, "a"), (3, "a")],
+                pins=[(3, "s"), (5, "e")],
             )
-        )
-    )
-
-    print(
-        constrain(
-            all_possible_words=all_words,
-            letters_to_remove="craneo",
-            letters_to_contain="",
-            pins=[(1, "s"), (2, "p"), (5, "l")],
         )
     )
