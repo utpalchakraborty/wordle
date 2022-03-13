@@ -1,6 +1,7 @@
 # word_list_file = 'words_5.txt'
 # word_list_file = "words_5_long.txt"
 word_list_file = "nytimes_list.txt"
+wordle_length = 5
 
 
 def get_word_data() -> list[str]:
@@ -56,7 +57,7 @@ def calculate_letter_frequency(words: list[str]) -> dict[str, float]:
         for c in word:
             freq[c] += 1
 
-    letter_count = len(words) * 5
+    letter_count = len(words) * wordle_length
     return {key: freq[key] / letter_count for key in freq}
 
 
@@ -80,16 +81,26 @@ def sort_by_entropy(words: list[str]) -> list[str]:
     return [t[0] for t in words_with_entropy]
 
 
+def get_tuples(in_string: str) -> list[tuple[int, str]]:
+    """
+    Given a string splits it into a list of tuples taking alternating
+    elements of the string
+    """
+    return [
+        (int(first), second) for first, second in zip(in_string[0::2], in_string[1::2])
+    ]
+
+
 if __name__ == "__main__":
     all_words = get_word_data()
-
     print(
         sort_by_entropy(
             constrain(
                 all_possible_words=all_words,
-                letters_to_remove="crnilp",
-                unpins=[(1, "a"), (3, "a")],
-                pins=[(3, "s"), (5, "e")],
+                letters_to_remove="raielt",
+                unpins=get_tuples('4s'),
+                pins=get_tuples('2o4u5s'),
             )
         )
     )
+
