@@ -1,12 +1,21 @@
 # word_list_file = 'words_5.txt'
 # word_list_file = "words_5_long.txt"
+import json
+from typing import Any
+
 word_list_file = "nytimes_list.txt"
 wordle_length = 5
 
+ngram_cut_off = 9.978495302793923e-08
+
+
+# def get_word_data() -> list[str]:
+#     with open(word_list_file) as possible_words:
+#         return [line.strip() for line in possible_words if line[0] != '#']
 
 def get_word_data() -> list[str]:
-    with open(word_list_file) as possible_words:
-        return [line.strip() for line in possible_words]
+    ngram_words: list[dict[str, Any]] = json.loads(open('/home/utpal/wordle/ngram_words.json', mode='r').read())
+    return [item["word"] for item in ngram_words if item["ngramsum"] > ngram_cut_off]
 
 
 def constrain(
@@ -97,9 +106,9 @@ if __name__ == "__main__":
         sort_by_entropy(
             constrain(
                 all_possible_words=all_words,
-                letters_to_remove="raielt",
-                unpins=get_tuples('4s'),
-                pins=get_tuples('2o4u5s'),
+                letters_to_remove="arsln",
+                unpins=get_tuples('3o5e1o3d4e'),
+                pins=get_tuples(''),
             )
         )
     )
